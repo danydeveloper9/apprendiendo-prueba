@@ -1,0 +1,19 @@
+body {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+}
+
+.unselectable {
+	user-drag: none; 
+  	user-select: none;
+  	-moz-user-select: none;
+  	-webkit-user-drag: none;
+  	-webkit-user-select: none;
+  	-ms-user-select: none;
+}
+
+iframe {
+	width: 320px;
+	height: 480px;
+  }

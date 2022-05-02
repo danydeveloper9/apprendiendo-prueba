@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Firebase CRUD</title>
+
+    <!-- BOOTSWATCH -->
+    <link
+      rel="stylesheet"
+      href="https://bootswatch.com/5/yeti/bootstrap.min.css"
+    />
+  </head>
+
+  <body class="">
+    <!-- ADD TASK -->
+    <div class="container p-4">
+      <div class="row">
+
+        <div class="col-12 text-center mb-5">
+          <h1>Selecciona la Dificultad</h1>
+          
+          <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+            <option selected>Selecciona una opción</option>
+            <option value="1">Novato</option>
+            <option value="2">Intermedio</option>
+            <option value="3">Avanzado</option>
+          </select>
+        </div>
+
+        <!-- FORM NOVATO -->
+        <div id="containerNovato" class="col-md-6 mb-2 mb-md-0">
+          <div class="card">
+            <div class="card-body">
+              <h1 class="h4">Añadir Pregunta Nivel Novato</h1>
+
+              <form id="novato-form">
+                <label for="palabraCorrecta">Palabra Correcta:</label>
+                <input
+                  type="text"
+                  id="novato-palabraCorrecta"
+                  class="form-control mb-3"
+                  autofocus
+                />
+
+                <label for="palabraIncompleta">Palabra Incompleta:</label>
+                <input
+                  type="text"
+                  id="novato-palabraIncompleta"
+                  class="form-control mb-3"
+                  autofocus
+                />
+
+                <label for="Opciones">Opciones:</label>
+                  <input
+                    type="text"
+                    id="novato-opc1"
+                    class="form-control mb-3"
+                    autofocus
+                  />
+
+                  <input
+                    type="text"
+                    id="novato-opc2"
+                    class="form-control mb-3"
+                    autofocus
+                  />
+  
+                  <input
+                    type="text"
+                    id="novato-opc3"
+                    class="form-control mb-3"
+                    autofocus
+                  />
+
+                  <input
+                    type="text"
+                    id="novato-opc4"
+                    class="form-control mb-3"
+                    autofocus
+                  />
+
+                <label for="Opciones">Opcion Correcta:</label>
+                  <input
+                    type="text"
+                    id="novato-opcCorrecta"
+                    class="form-control mb-3"
+                    autofocus
+                  />
+
+                <label for="Pista">Pista:</label>
+                <input
+                  type="text"
+                  id="novato-pista"
+                  class="form-control mb-3"
+                  autofocus
+                />
+
+                <label for="Sugerencia">Sugerencia:</label>
+                <input
+                  type="text"
+                  id="novato-sugerencia"
+                  class="form-control mb-3"
+                  autofocus
+                />
+
+                <button class="btn btn-primary" id="btn-novato-form">Guardar</button>
+              </form>
+            </div>
+          </div>
+        </div>
+        <!-- Tasks List -->
+        <div class="col-md-6" id="quizNovato-container"></div>
+
+
+        <!-- FORM INTERMEDIO -->
+
+
+        <!-- FORM AVANZADO -->
+      </div>
+    </div>
+
+    <!-- CUSTOM CODE -->
+    <script src="../scripts/ejercicios.js" type="module"></script>
+  </body>
+</html>

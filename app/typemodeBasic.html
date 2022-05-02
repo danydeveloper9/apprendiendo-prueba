@@ -1,0 +1,190 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+  <meta name="viewport" content="width=device-width">
+  <meta charset="UTF-8">
+  <title>Compare pixels</title>
+
+  <!-- Bootstrap CSS CDN -->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+  <style type="text/css">
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: helvetica,arial,sans-serif;
+    }
+    canvas {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+    <canvas></canvas>
+
+    <!-- SweetAlert2 CDN -->
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.all.min.js"></script>
+<script>
+
+const swalWithBootstrapButtons = Swal.mixin({
+  customClass: {
+  	actions: 'd-grid d-md-flex align-items-center justify-content-around w-100 mt-4 p-0',
+    confirmButton: 'btn btn-info order-2 mt-3 mt-md-0',
+    cancelButton: 'btn btn-danger order-1 backButton',
+    input: 'form-select'
+  },
+  buttonsStyling: false
+})
+
+let ejercicios = ['A', 'a', 'E', 'e', 'I', 'i', 'O', 'o', 'U', 'u',];
+let noQuiz = 0;
+
+var c = document.querySelector('canvas');
+var cx = c.getContext('2d');
+var mousedown = false;
+var oldx = null;
+var oldy = null;
+var pixels = null;
+var letterpixels = null;
+
+function setupCanvas() {
+  c.height = 480;
+  c.width = 320;
+  cx.lineWidth = 30;
+  cx.lineCap = 'round';
+  cx.strokeStyle = 'rgb(0, 0, 50)';
+  cx.font = 'bold 300px helvetica';
+  cx.fillStyle = 'rgb(192, 192, 192)';
+  cx.textBaseline = 'middle';
+  drawletter(ejercicios[noQuiz]);
+  pixels = cx.getImageData(0, 0, c.width, c.height);
+  letterpixels = getpixelamount(192, 192, 192);
+}
+
+function drawletter(letter) {
+  var centerx = (c.width - cx.measureText(letter).width) / 2;
+  var centery = c.height / 2;
+  cx.fillText(letter, centerx, centery);
+};
+
+function showerror(error) {
+  mousedown = false;
+  alert(error);
+};
+
+function paint(x, y) {
+  var colour = getpixelcolour(x, y);
+  if (colour.a === 0) {
+    showerror('Estas fallando, recuerda no salirte de la zona sombreada.');
+  } else {
+    cx.beginPath();
+    // if (oldx > 0 && oldy > 0) {
+    //   cx.moveTo(oldx, oldy);
+    // }
+    cx.lineTo(x, y);
+    cx.stroke();
+    cx.closePath();
+    oldx = x;
+    oldy = y;
+  }
+};
+
+function getpixelcolour(x, y) {
+  var index = ((y * (pixels.width * 4)) + (x * 4));
+  return {
+    r: pixels.data[index],
+    g: pixels.data[index + 1],
+    b: pixels.data[index + 2],
+    a: pixels.data[index + 3]
+  };
+}
+
+function getpixelamount(r, g, b) {
+  var pixels = cx.getImageData(0, 0, c.width, c.height);
+  var all = pixels.data.length;
+  var amount = 0;
+  for (i = 0; i < all; i += 4) {
+    if (pixels.data[i] === r &&
+        pixels.data[i + 1] === g &&
+        pixels.data[i + 2] === b) {
+      amount++;
+    }
+  }
+  return amount;
+};
+
+function pixelthreshold() {
+  if (getpixelamount(0, 0, 50) / letterpixels > 0.35) {
+    respuestaCorrecta();
+  }
+};
+
+function onmousedown(ev) {
+  mousedown = true;
+  ev.preventDefault();
+};
+function onmouseup(ev) {
+  mousedown = false;
+  pixelthreshold();
+  ev.preventDefault();
+};
+function onmousemove(ev) {
+  var x = ev.clientX;
+  var y = ev.clientY;
+  if (mousedown) {
+    paint(x, y);
+  }
+};
+
+function onmousedown(ev) {
+  mousedown = true;
+  ev.preventDefault();
+};
+function ontouchend(ev) {
+  mousedown = false;
+  pixelthreshold();
+  ev.preventDefault();
+};
+function ontouchmove(ev) {
+  var x = ev.clientX;
+  var y = ev.clientY;
+  if (mousedown) {
+    paint(x, y);
+  }
+};
+
+function respuestaCorrecta () {
+	swalWithBootstrapButtons.fire({
+	  title: '¡Respuesta Correcta!',
+	  text: 'Muy bien, continua asi.',
+	  icon: 'success',
+	  confirmButtonText: `
+	  Siguiente Ejercicio
+	  <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Pro 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M384 32H64C28.65 32 0 60.65 0 96v320c0 35.34 28.65 64 64 64h320c35.35 0 64-28.66 64-64V96C448 60.65 419.3 32 384 32zM312.3 273.6l-112 104C195.8 381.8 189.9 384 184 384c-3.25 0-6.5-.6562-9.594-2C165.7 378.2 160 369.5 160 360v-208c0-9.531 5.656-18.19 14.41-22c8.75-3.75 18.94-2.062 25.94 4.406l112 104C317.2 242.1 320 249.3 320 256S317.2 269 312.3 273.6z"/></svg>
+	  `,
+	  allowOutsideClick: false
+	}).then((result) => {
+		if(result.isConfirmed){
+      cx.clearRect(0, 0, c.width, c.height);
+      noQuiz++;
+      oldx = null;
+      oldy = null;
+      setupCanvas();
+		} else {
+			// window.location.href = "../index.html";
+		}
+	})
+};
+
+
+c.addEventListener('mousedown', onmousedown, false);
+c.addEventListener('mouseup', onmouseup, false);
+c.addEventListener('mousemove', onmousemove, false);
+
+c.addEventListener('touchstart', ontouchstart, false);
+c.addEventListener('touchend', ontouchend, false);
+c.addEventListener('touchmove', ontouchmove, false);
+
+setupCanvas();
+</script>  
+</body>
+</html>
